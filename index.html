@@ -3,33 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Ultimate Platform</title>
+    <title>MS Short Video - Ultimate Mega Platform</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <style>
-        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; }
-        body { margin: 0; background-color: #000; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
+        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --bg-dark: #010101; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #000; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
+        
         .app-container { position: relative; width: 100%; max-width: 450px; height: 100vh; background: #000; display: flex; flex-direction: column; overflow: hidden; }
         .app-videos { width: 100%; height: calc(100% - 60px); scroll-snap-type: y mandatory; overflow-y: scroll; scrollbar-width: none; }
         .app-videos::-webkit-scrollbar { display: none; }
+        
         .video-container { position: relative; width: 100%; height: 100%; scroll-snap-align: start; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* DOB Modal Styling */
-        .dob-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        .dob-box { background: #121214; padding: 25px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; border: 1px solid #222; }
-        .dob-box h2 { font-size: 20px; margin-bottom: 10px; color: #fff; }
-        .dob-box p { font-size: 13px; color: #aaa; margin-bottom: 20px; }
-        .dob-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; }
-        .dob-btn { background: var(--tiktok-pink); color: white; border: none; padding: 12px 30px; font-size: 15px; font-weight: bold; border-radius: 25px; cursor: pointer; width: 100%; }
+
+        /* 🎂 DOB Screen Styling */
+        .dob-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.96); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
+        .dob-box { background: #121214; padding: 30px 24px; border-radius: 20px; width: 100%; max-width: 360px; text-align: center; border: 1px solid #29292e; box-shadow: 0px 10px 30px rgba(0,0,0,0.5); }
+        .dob-box h2 { font-size: 22px; margin-bottom: 12px; font-weight: 700; color: #fff; }
+        .dob-box p { font-size: 14px; color: #a1a1a8; margin-bottom: 24px; line-height: 1.4; }
+        .dob-input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #3a3a44; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; }
+        .dob-input:focus { border-color: var(--tiktok-pink); }
+        .dob-btn { background: var(--tiktok-pink); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        .dob-btn:active { opacity: 0.8; }
+
+        /* 👤 Login Screen Panel */
+        .login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
+        .login-header { display: flex; align-items: center; margin-bottom: 40px; }
+        .close-btn { font-size: 28px; background: none; border: none; color: white; cursor: pointer; }
+        .login-title { font-size: 24px; font-weight: bold; margin-auto: center; text-align: center; width: 100%; margin-right: 28px; }
+        .login-methods { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
+        .method-btn { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #16161a; color: white; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
+        .method-btn:active { background: #222; }
 
         .bottom-app-bar { width: 100%; height: 60px; background: #000000; border-top: 0.5px solid #121212; display: flex; justify-content: space-around; align-items: center; z-index: 300; }
         .nav-item-btn { background: none; border: none; color: #8a8b8f; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
         .nav-item-btn.active { color: #ffffff; }
+        .nav-custom-icon { font-size: 22px; }
+        
         .tiktok-plus-container { position: relative; width: 46px; height: 30px; background: #fff; border-radius: 8px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .tiktok-plus-container::before { content: ''; position: absolute; top: 0; left: -3px; width: 100%; height: 100%; background: var(--tiktok-cyan); border-radius: 8px; z-index: -1; }
         .tiktok-plus-container::after { content: ''; position: absolute; top: 0; right: -3px; width: 100%; height: 100%; background: var(--tiktok-pink); border-radius: 8px; z-index: -2; }
+        .tiktok-plus-symbol { color: #000; font-size: 22px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -37,47 +54,51 @@
     <div class="dob-overlay" id="dobVerificationModal">
         <div class="dob-box">
             <h2>अपनी जन्मतिथि चुनें 🎂</h2>
-            <p>MS Shorts पर आगे बढ़ने ke liye कृपया अपनी Date of Birth दर्ज करें।</p>
+            <p>MS Shorts community का हिस्सा बनने के लिए कृपया अपनी असली जन्मतिथि दर्ज करें।</p>
             <input type="date" class="dob-input" id="userBirthDateField">
-            <button class="dob-btn" onclick="verifyUserAgeGateLimit()">प्रवेश करें</button>
+            <button class="dob-btn" onclick="verifyUserAgeGateLimit()">आगे बढ़ें</button>
+        </div>
+    </div>
+
+    <div class="login-screen" id="loginDashboardUI">
+        <div class="login-header">
+            <button class="close-btn" onclick="toggleLoginDashboard(false)">✕</button>
+            <div class="login-title">MS Shorts में लॉग इन करें</div>
+        </div>
+        <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 30px;">वीडियो अपलोड करने और लाइक करने के लिए अकाउंट बनाएं।</p>
+        <div class="login-methods">
+            <button class="method-btn" onclick="alert('Google Login Pipeline Jodna Baaki Hai!')">
+                <span style="font-size: 18px;">🌐</span> Google के साथ आगे बढ़ें
+            </button>
+            <button class="method-btn" onclick="alert('Phone Number OTP Setup Chalu Ho Raha Hai!')">
+                <span style="font-size: 18px;">📱</span> फोन नंबर का उपयोग करें
+            </button>
         </div>
     </div>
 
     <div class="app-container">
         <div class="main-panel-view"><div class="app-videos" id="videoFeedPipeline"></div></div>
+        
         <div class="bottom-app-bar">
-            <button class="nav-item-btn active"><span>🏠</span><span>Home</span></button>
-            <button class="nav-item-btn"><span>👥</span><span>Friends</span></button>
-            <div class="tiktok-plus-container" onclick="alert('कृपया पहले प्रोफाइल में जाकर मोबाइल नंबर/Google से लॉगिन करें!')"><div class="tiktok-plus-symbol">+</div></div>
-            <button class="nav-item-btn"><span>💬</span><span>Inbox</span></button>
-            <button class="nav-item-btn"><span>👤</span><span>Profile</span></button>
+            <button class="nav-item-btn active" onclick="window.location.reload()"><span class="nav-custom-icon">🏠</span><span>Home</span></button>
+            <button class="nav-item-btn"><span class="nav-custom-icon">👥</span><span>Friends</span></button>
+            
+            <div class="tiktok-plus-container" onclick="toggleLoginDashboard(true)"><div class="tiktok-plus-symbol">+</div></div>
+            
+            <button class="nav-item-btn"><span class="nav-custom-icon">💬</span><span>Inbox</span></button>
+            <button class="nav-item-btn" onclick="toggleLoginDashboard(true)"><span class="nav-custom-icon">👤</span><span>Profile</span></button>
         </div>
     </div>
 
     <script>
-        // 🔥 Aapki Firebase configuration ka sancha (Yahan apni keys aayengi)
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY_HERE",
-            authDomain: "YOUR_AUTH_DOMAIN_HERE",
-            projectId: "YOUR_PROJECT_ID_HERE",
-            storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-            appId: "YOUR_APP_ID_HERE"
-        };
-        
-        // Initialize Firebase (Bina key ke test alert dega)
-        if(firebaseConfig.apiKey !== "YOUR_API_KEY_HERE") {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        // DOB Check Logic
+        // 🚨 AGE CHECK VALIDATION LOGIC
         function verifyUserAgeGateLimit() {
             const inputDate = document.getElementById('userBirthDateField').value;
             if(!inputDate) {
-                alert("कृपया सही तारीख चुनें!");
+                alert("कृपया सही तारीख दर्ज करें!");
                 return;
             }
-            // Age Calculate karein
+            
             const birthDate = new Date(inputDate);
             const today = new Date();
             let age = today.getFullYear() - birthDate.getFullYear();
@@ -87,25 +108,40 @@
             }
 
             if(age < 13) {
-                alert("माफ़ी चाहते हैं, इस प्लेटफॉर्म का इस्तेमाल करने के लिए आपकी उम्र कम से कम 13 वर्ष होनी चाहिए।");
+                alert("माफ़ी चाहते हैं! इस प्लेटफ़ॉर्म का उपयोग करने के लिए आपकी आयु कम से कम 13 वर्ष होनी चाहिए।");
             } else {
-                // DOB lock karke screen hatayein
                 localStorage.setItem('ms_user_dob', inputDate);
                 document.getElementById('dobVerificationModal').style.display = 'none';
                 initGlobalFeedPipeline();
             }
         }
 
-        // Auto check if DOB already saved
+        // Auto Bypass DOB if already filled in past
         if(localStorage.getItem('ms_user_dob')) {
             document.getElementById('dobVerificationModal').style.display = 'none';
         }
 
+        // Toggle Login Screen View
+        function toggleLoginDashboard(show) {
+            document.getElementById('loginDashboardUI').style.display = show ? 'flex' : 'none';
+        }
+
+        // Load Default Video Feed
         function initGlobalFeedPipeline() {
             document.getElementById('videoFeedPipeline').innerHTML = `
                 <div class="video-container">
                     <video loop playsinline autoplay muted src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-taking-a-selfie-42998-large.mp4"></video>
+                    <div style="position: absolute; bottom: 30px; left: 15px; text-shadow: 1px 1px 5px rgba(0,0,0,0.8);">
+                        <h3>@ms_shorts_official</h3>
+                        <p>Welcome to MS Shorts! Press [+] to Login & post. #viral</p>
+                    </div>
                 </div>`;
+            
+            // Unmute on first click
+            const vid = document.querySelector('video');
+            if(vid) {
+                document.body.addEventListener('click', () => { vid.muted = false; }, {once: true});
+            }
         }
         
         if(localStorage.getItem('ms_user_dob')) { window.onload = initGlobalFeedPipeline; }

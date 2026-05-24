@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Premium Hub</title>
+    <title>MS Short Video - Ultimate Platform</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <style>
         :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; }
         body { margin: 0; background-color: #000; font-family: 'Segoe UI', Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; color: white; }
@@ -12,121 +15,100 @@
         .app-videos::-webkit-scrollbar { display: none; }
         .video-container { position: relative; width: 100%; height: 100%; scroll-snap-align: start; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
-        .double-tap-heart { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 90px; color: var(--tiktok-pink); z-index: 99; pointer-events: none; transition: transform 0.2s ease; }
-        .double-tap-heart.pop { transform: translate(-50%, -50%) scale(1); }
-        .video-sidebar { position: absolute; right: 12px; bottom: 35px; display: flex; flex-direction: column; gap: 20px; align-items: center; z-index: 10; }
-        .profile-pic { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #fff; object-fit: cover; }
-        .profile-plus-badge { position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%); background: var(--tiktok-pink); color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; justify-content: center; align-items: center; font-size: 13px; font-weight: bold; border: 1.5px solid #000; cursor: pointer; }
-        .sidebar-icon-group { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
-        .sidebar-icon-group span.icon-art { font-size: 30px; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.8)); }
-        .sidebar-count { font-size: 12px; font-weight: 600; margin-top: 2px; text-shadow: 1px 1px 3px rgba(0,0,0,0.9); }
-        .video-footer { position: absolute; bottom: 35px; left: 15px; right: 80px; color: white; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); z-index: 10; }
-        .video-footer h3 { margin: 0 0 6px 0; font-size: 16px; font-weight: 600; }
-        .video-footer p { margin: 0; font-size: 14px; opacity: 0.95; line-height: 1.3; }
-        .bottom-app-bar { width: 100%; height: 60px; background: #000000; border-top: 0.5px solid #121212; display: flex; justify-content: space-around; align-items: center; z-index: 300; box-sizing: border-box; padding-bottom: 4px; }
+        
+        /* DOB Modal Styling */
+        .dob-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .dob-box { background: #121214; padding: 25px; border-radius: 16px; width: 100%; max-width: 350px; text-align: center; border: 1px solid #222; }
+        .dob-box h2 { font-size: 20px; margin-bottom: 10px; color: #fff; }
+        .dob-box p { font-size: 13px; color: #aaa; margin-bottom: 20px; }
+        .dob-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; }
+        .dob-btn { background: var(--tiktok-pink); color: white; border: none; padding: 12px 30px; font-size: 15px; font-weight: bold; border-radius: 25px; cursor: pointer; width: 100%; }
+
+        .bottom-app-bar { width: 100%; height: 60px; background: #000000; border-top: 0.5px solid #121212; display: flex; justify-content: space-around; align-items: center; z-index: 300; }
         .nav-item-btn { background: none; border: none; color: #8a8b8f; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
         .nav-item-btn.active { color: #ffffff; }
-        .nav-custom-icon { font-size: 24px; }
         .tiktok-plus-container { position: relative; width: 46px; height: 30px; background: #fff; border-radius: 8px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
         .tiktok-plus-container::before { content: ''; position: absolute; top: 0; left: -3px; width: 100%; height: 100%; background: var(--tiktok-cyan); border-radius: 8px; z-index: -1; }
         .tiktok-plus-container::after { content: ''; position: absolute; top: 0; right: -3px; width: 100%; height: 100%; background: var(--tiktok-pink); border-radius: 8px; z-index: -2; }
-        .tiktok-plus-symbol { color: #000; font-size: 22px; font-weight: bold; }
-        .studio-sheet { position: absolute; bottom: -100%; left: 0; width: 100%; height: auto; background: #0f0f11; border-top-left-radius: 16px; border-top-right-radius: 16px; z-index: 4500; padding: 12px 20px 30px 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; transition: bottom 0.3s cubic-bezier(0.25, 1, 0.5, 1); border-top: 1px solid #1f1f24; }
-        .studio-sheet.open { bottom: 0; }
-        .sheet-indicator-line { width: 40px; height: 4px; background: #33333b; border-radius: 2px; margin: 0 auto 10px auto; }
-        .studio-option-card { background: #18181c; padding: 14px 16px; border-radius: 12px; display: flex; align-items: center; gap: 16px; cursor: pointer; border: 1px solid #222227; }
-        .studio-option-card h4 { margin: 0; font-size: 15px; color: white; }
-        .post-screen { position:absolute; top:0; left:0; width:100%; height:100%; z-index:4900; display:none; flex-direction:column; padding:20px; box-sizing:border-box; background:#000; }
-        .post-preview-box { width: 100%; height: 240px; background: #0a0a0c; border-radius: 12px; overflow: hidden; border: 1px solid #222; margin-bottom: 18px; }
-        .auth-input-field { width: 100%; background: #1a1a1e; border: 1px solid #2a2a30; color: #ffffff; padding: 14px; border-radius: 8px; box-sizing: border-box; outline: none; margin-bottom: 16px; font-size: 14.5px; }
-        .progress-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; }
-        .progress-circle-box { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--tiktok-pink); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(254,44,85,0.4); margin-bottom: 16px; font-size: 26px; font-weight: 800; color: #00f7ff; }
     </style>
 </head>
 <body>
+
+    <div class="dob-overlay" id="dobVerificationModal">
+        <div class="dob-box">
+            <h2>अपनी जन्मतिथि चुनें 🎂</h2>
+            <p>MS Shorts पर आगे बढ़ने ke liye कृपया अपनी Date of Birth दर्ज करें।</p>
+            <input type="date" class="dob-input" id="userBirthDateField">
+            <button class="dob-btn" onclick="verifyUserAgeGateLimit()">प्रवेश करें</button>
+        </div>
+    </div>
+
     <div class="app-container">
         <div class="main-panel-view"><div class="app-videos" id="videoFeedPipeline"></div></div>
         <div class="bottom-app-bar">
-            <button class="nav-item-btn active"><span class="nav-custom-icon">🏠</span><span>Home</span></button>
-            <button class="nav-item-btn"><span class="nav-custom-icon">👥</span><span>Friends</span></button>
-            <div class="tiktok-plus-container" onclick="toggleStudioSheetDisplayState(true)"><div class="tiktok-plus-symbol">+</div></div>
-            <button class="nav-item-btn"><span class="nav-custom-icon">💬</span><span>Inbox</span></button>
-            <button class="nav-item-btn"><span class="nav-custom-icon">👤</span><span>Profile</span></button>
+            <button class="nav-item-btn active"><span>🏠</span><span>Home</span></button>
+            <button class="nav-item-btn"><span>👥</span><span>Friends</span></button>
+            <div class="tiktok-plus-container" onclick="alert('कृपया पहले प्रोफाइल में जाकर मोबाइल नंबर/Google से लॉगिन करें!')"><div class="tiktok-plus-symbol">+</div></div>
+            <button class="nav-item-btn"><span>💬</span><span>Inbox</span></button>
+            <button class="nav-item-btn"><span>👤</span><span>Profile</span></button>
         </div>
-        <div class="studio-sheet" id="studioSheetComponent">
-            <div class="sheet-indicator-line"></div>
-            <div style="font-size: 16px; font-weight: 700; text-align: center; color: #e1e1e6; margin-bottom: 10px;">Create New Content Post</div>
-            <div class="studio-option-card" onclick="document.getElementById('nativeCameraInputNode').click()"><div style="font-size:24px;">🔴</div><div><h4>Direct Camera Shoot</h4></div></div>
-            <div class="studio-option-card" onclick="document.getElementById('nativeGalleryInputNode').click()"><div style="font-size:24px;">📁</div><div><h4>Upload From Gallery</h4></div></div>
-            <button style="background: #222227; border: none; color: white; padding: 14px; border-radius: 10px; font-weight: 700; cursor: pointer; border: 1px solid #2c2c35;" onclick="toggleStudioSheetDisplayState(false)">Cancel</button>
-            <input type="file" id="nativeGalleryInputNode" accept="video/mp4" style="display:none;" onchange="pipeSelectedMediaAssetToPreviewStage(event)">
-            <input type="file" id="nativeCameraInputNode" accept="video/mp4" capture="user" style="display:none;" onchange="pipeSelectedMediaAssetToPreviewStage(event)">
-        </div>
-        <div class="post-screen" id="postDashboardManagementConsole">
-            <div style="font-size:18px; font-weight:bold; margin-bottom:15px; color:var(--tiktok-pink);">Publish Configuration</div>
-            <div class="post-preview-box"><video id="consoleWorkspaceVideoPreviewPlayer" style="width:100%; height:100%; object-fit:cover;" loop muted playsinline controls></video></div>
-            <input type="text" class="auth-input-field" id="postCustomUsernameInput" placeholder="Specify account handle (e.g. @ms_shorts)">
-            <textarea class="auth-input-field" id="postCustomCaptionTextArea" placeholder="Write cool captions here... #bhojpurisong #viralvideo" style="height:90px; background:#111; resize:none;"></textarea>
-            <button class="auth-input-field" style="background:var(--tiktok-pink); color:white; font-weight:700; border:none; cursor:pointer;" onclick="executeHighSpeedTransmissionPipeline()">Publish Shorts Live</button>
-        </div>
-        <div class="progress-overlay" id="trackerOverlay"><div class="progress-circle-box" id="livePercentageNum">0%</div><div style="font-size:14px; color:#aaa;">Streaming audio-video data packets...</div></div>
     </div>
+
     <script>
-        let activeFileStreamBlob = null;
-        let localFeedDataStore = JSON.parse(localStorage.getItem('ms_videos_disk')) || [];
-        function toggleStudioSheetDisplayState(show) { document.getElementById('studioSheetComponent').classList.toggle('open', show); }
-        function pipeSelectedMediaAssetToPreviewStage(event) {
-            activeFileStreamBlob = event.target.files[0]; if(!activeFileStreamBlob) return; toggleStudioSheetDisplayState(false);
-            document.getElementById('postDashboardManagementConsole').style.display = 'flex';
-            const playerNode = document.getElementById('consoleWorkspaceVideoPreviewPlayer'); playerNode.src = URL.createObjectURL(activeFileStreamBlob); playerNode.play();
+        // 🔥 Aapki Firebase configuration ka sancha (Yahan apni keys aayengi)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_AUTH_DOMAIN_HERE",
+            projectId: "YOUR_PROJECT_ID_HERE",
+            storageBucket: "YOUR_STORAGE_BUCKET_HERE",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
+            appId: "YOUR_APP_ID_HERE"
+        };
+        
+        // Initialize Firebase (Bina key ke test alert dega)
+        if(firebaseConfig.apiKey !== "YOUR_API_KEY_HERE") {
+            firebase.initializeApp(firebaseConfig);
         }
-        function executeHighSpeedTransmissionPipeline() {
-            if(!activeFileStreamBlob) return;
-            const userHandleValue = document.getElementById('postCustomUsernameInput').value || "@ms_shorts";
-            const captionTextValue = document.getElementById('postCustomCaptionTextArea').value || "New video release! #bhojpurisong #viralvideo";
-            document.getElementById('postDashboardManagementConsole').style.display = 'none'; document.getElementById('trackerOverlay').style.display = 'flex';
-            const xhrNode = new XMLHttpRequest(); const networkFormPackage = new FormData(); networkFormPackage.append('file', activeFileStreamBlob); networkFormPackage.append('upload_preset', 'ml_default');
-            xhrNode.open('POST', 'https://api.cloudinary.com/v1_1/demo/video/upload', true);
-            xhrNode.upload.onprogress = function(e) { if(e.lengthComputable) { document.getElementById('livePercentageNum').innerText = Math.round((e.loaded / e.total) * 100) + "%"; } };
-            xhrNode.onload = function() {
-                if(xhrNode.status === 200) {
-                    const dataRes = JSON.parse(xhrNode.responseText); const newPost = { url: dataRes.secure_url, username: userHandleValue, caption: captionTextValue, likes: '48.3K' };
-                    localFeedDataStore.unshift(newPost); localStorage.setItem('ms_videos_disk', JSON.stringify(localFeedDataStore)); window.location.reload();
-                } else { alert("Upload error!"); window.location.reload(); }
-            };
-            xhrNode.send(networkFormPackage);
+
+        // DOB Check Logic
+        function verifyUserAgeGateLimit() {
+            const inputDate = document.getElementById('userBirthDateField').value;
+            if(!inputDate) {
+                alert("कृपया सही तारीख चुनें!");
+                return;
+            }
+            // Age Calculate karein
+            const birthDate = new Date(inputDate);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+
+            if(age < 13) {
+                alert("माफ़ी चाहते हैं, इस प्लेटफॉर्म का इस्तेमाल करने के लिए आपकी उम्र कम से कम 13 वर्ष होनी चाहिए।");
+            } else {
+                // DOB lock karke screen hatayein
+                localStorage.setItem('ms_user_dob', inputDate);
+                document.getElementById('dobVerificationModal').style.display = 'none';
+                initGlobalFeedPipeline();
+            }
         }
+
+        // Auto check if DOB already saved
+        if(localStorage.getItem('ms_user_dob')) {
+            document.getElementById('dobVerificationModal').style.display = 'none';
+        }
+
         function initGlobalFeedPipeline() {
-            const containerNode = document.getElementById('videoFeedPipeline'); containerNode.innerHTML = ""; if(localFeedDataStore.length === 0) return renderMockTimelineFallbackSnapshot();
-            localFeedDataStore.forEach((dataLog, index) => {
-                const boxCardNode = document.createElement('div'); boxCardNode.className = 'video-container';
-                boxCardNode.innerHTML = `
-                    <div class="double-tap-heart" id="heart-id-${index}">❤️</div><video loop playsinline webkit-playsinline src="${dataLog.url}"></video>
-                    <div class="video-sidebar">
-                        <div class="profile-avatar-block"><img class="profile-pic" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100"><div class="profile-plus-badge" onclick="this.innerText='✓'; this.style.background='#111';">+</div></div>
-                        <div class="sidebar-icon-group" onclick="executeLike('${index}')"><span class="icon-art">❤️</span><span class="sidebar-count" id="count-${index}">${dataLog.likes}</span></div>
-                        <div class="sidebar-icon-group"><span class="icon-art">💬</span><span class="sidebar-count">1,109</span></div>
-                        <div class="sidebar-icon-group"><span class="icon-art">🏳️</span><span class="sidebar-count">2,744</span></div>
-                        <div class="sidebar-icon-group" onclick="alert('Link Copied!')"><span class="icon-art">↩️</span><span class="sidebar-count">1,446</span></div>
-                    </div><div class="video-footer"><h3>${dataLog.username}</h3><p>${dataLog.caption}</p></div>`;
-                let lastClick = 0; const videoNode = boxCardNode.querySelector('video');
-                videoNode.addEventListener('click', function() {
-                    let currentClick = new Date().getTime();
-                    if ((currentClick - lastClick) < 300) {
-                        const overlayNode = document.getElementById(`heart-id-${index}`); overlayNode.classList.add('pop'); executeLike(index); setTimeout(() => overlayNode.classList.remove('pop'), 700);
-                    } else { setTimeout(() => { if (new Date().getTime() - lastClick >= 300) { if (videoNode.paused) { videoNode.muted=false; videoNode.play(); } else videoNode.pause(); } }, 300); }
-                    lastClick = currentClick;
-                }); containerNode.appendChild(boxCardNode);
-            });
-            setTimeout(() => { const firstVideo = document.querySelector('.video-container video'); if (firstVideo) { firstVideo.muted=false; firstVideo.play(); } }, 500);
-        }
-        function executeLike(index) { document.getElementById(`count-${index}`).innerText = "48.4K"; }
-        function renderMockTimelineFallbackSnapshot() {
             document.getElementById('videoFeedPipeline').innerHTML = `
-                <div class="video-container"><video loop playsinline autoplay muted src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-taking-a-selfie-42998-large.mp4"></video>
-                    <div class="video-footer"><h3>@ms_sort_system</h3><p>Platform High Speed Network Active! Click [+] button to test your video uploads with full crystal sound tracks loops. #viralvideo</p></div></div>`;
+                <div class="video-container">
+                    <video loop playsinline autoplay muted src="https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-taking-a-selfie-42998-large.mp4"></video>
+                </div>`;
         }
-        window.onload = initGlobalFeedPipeline;
+        
+        if(localStorage.getItem('ms_user_dob')) { window.onload = initGlobalFeedPipeline; }
     </script>
 </body>
 </html>

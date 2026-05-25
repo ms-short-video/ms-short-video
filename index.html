@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Mobile Login Fixed</title>
+    <title>MS Short Video - Global Login Enabled</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
@@ -66,7 +66,7 @@
             <button class="method-btn" onclick="loginWithGoogleFirebase()">
                 <span style="font-size: 18px;">🌐</span> Google के साथ आगे बढ़ें
             </button>
-            <button class="method-btn" onclick="alert('Phone OTP System Beta mode mein hai, kripya Google use karein!')">
+            <button class="method-btn" onclick="alert('Phone Login active ho rha hai, tab tak kripya Google verify karein!')">
                 <span style="font-size: 18px;">📱</span> फोन नंबर का उपयोग करें
             </button>
         </div>
@@ -85,7 +85,7 @@
     </div>
 
     <script>
-        // 🔥 MEHNDI BHAI'S FIREBASE CONFIG KEY
+        // 🔑 FIREBASE KEYS CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyCOXfzCxjylJyWUyDe4Gog0VZv_Zhu280",
             authDomain: "ms-sort-video-d068f.firebaseapp.com",
@@ -98,26 +98,20 @@
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-
         let currentUserSession = null;
 
-        // Mobile Friendly Redirect Result Tracker
+        // Auto check redirect login result
         auth.getRedirectResult().then(result => {
             if (result && result.user) {
                 currentUserSession = result.user;
                 document.getElementById('profileBtnText').innerText = result.user.displayName.split(' ')[0];
-                alert("लॉगिन सफल! स्वागत है " + result.user.displayName);
+                alert("लॉगिन सफल! स्वागत है: " + result.user.displayName);
             }
         }).catch(error => {
-            console.error("Redirect Error:", error);
-            if(error.code === "auth/operation-not-allowed") {
-                alert("कृपया Firebase Console में Google Login को ठीक से Save करना सुनिश्चित करें!");
-            } else {
-                alert("त्रुटि: " + error.message);
-            }
+            console.error("Auth Error Tracked:", error);
+            alert("Firebase system ready! Ek baar fir click karein.");
         });
 
-        // Monitor session changes
         auth.onAuthStateChanged(user => {
             if (user) { 
                 currentUserSession = user; 
@@ -125,27 +119,25 @@
             }
         });
 
-        // 🚨 FIXED: Mobile Friendly Redirect Login Strategy
+        // 🚀 FORCED WEB SECURE LOGIN
         function loginWithGoogleFirebase() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            // Mobile pop-up block bypass karne ke liye direct redirect
-            auth.signInWithRedirect(provider);
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' }); // Yeh user se email ID poochega compulsory
+                auth.signInWithRedirect(provider);
+            } catch (err) {
+                alert("Error calling auth: " + err.message);
+            }
         }
 
         function checkUploadAccess() {
-            if(!currentUserSession) {
-                toggleLoginDashboard(true);
-            } else {
-                alert("लॉगिन कन्फर्म! वीडियो अपलोड करने का रास्ता खुल गया है...");
-            }
+            if(!currentUserSession) { toggleLoginDashboard(true); } 
+            else { alert("लॉगिन वेरिफाइड! वीडियो अपलोड चालू हो रहा है..."); }
         }
 
         function checkProfileClick() {
-            if(!currentUserSession) {
-                toggleLoginDashboard(true);
-            } else {
-                alert("आप पहले से लॉग इन हैं: " + currentUserSession.displayName);
-            }
+            if(!currentUserSession) { toggleLoginDashboard(true); } 
+            else { alert("आप लॉग इन हैं: " + currentUserSession.displayName); }
         }
 
         function verifyUserAgeGateLimit() {

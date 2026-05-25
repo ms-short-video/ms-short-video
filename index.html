@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Absolute Login Fix</title>
+    <title>MS Short Video - Absolute Fix</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
@@ -66,9 +66,6 @@
             <button class="method-btn" onclick="loginWithGoogleFirebase()">
                 <span style="font-size: 18px;">🌐</span> Google के साथ आगे बढ़ें
             </button>
-            <button class="method-btn" onclick="alert('Phone OTP link active ho rha hai, kripya Google verify karein!')">
-                <span style="font-size: 18px;">📱</span> फोन नंबर का उपयोग करें
-            </button>
         </div>
     </div>
 
@@ -85,42 +82,35 @@
     </div>
 
     <script>
-        // 🔒 MEHNDI BHAI'S RE-VERIFIED SECURE KEYS
+        // 🔄 NEW GENERATED CONFIG FROM SCREENSHOT
         const firebaseConfig = {
             apiKey: "AIzaSyCOXfzCxjylJyWUyDe4Gog0VZv_Zhu280",
             authDomain: "ms-sort-video-d068f.firebaseapp.com",
             projectId: "ms-sort-video-d068f",
             storageBucket: "ms-sort-video-d068f.firebasestorage.app",
             messagingSenderId: "1095418770879",
-            appId: "1:1095418770879:web:ad529ff44dbac6b5d9dd0a",
-            measurementId: "G-K2PGEF13CC"
+            appId: "1:1095418770879:web:dc36a8d06a701b7ed9dd0a", // Updated
+            measurementId: "G-FXG4J5454R" // Updated
         };
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         let currentUserSession = null;
 
-        // Secure Login Trigger Engine
         function loginWithGoogleFirebase() {
-            try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                // Forced selection method to fix credential error
-                provider.setCustomParameters({ prompt: 'select_account' });
-                auth.signInWithRedirect(provider);
-            } catch (err) {
-                alert("Login Error: " + err.message);
-            }
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+            auth.signInWithRedirect(provider);
         }
 
-        // Catch and process redirect login tokens
         auth.getRedirectResult().then(result => {
             if (result && result.user) {
                 currentUserSession = result.user;
                 document.getElementById('profileBtnText').innerText = result.user.displayName.split(' ')[0];
-                alert("लॉगिन सफल! स्वागत है " + result.user.displayName);
+                alert("लॉगिन सफल! " + result.user.displayName);
             }
         }).catch(error => {
-            console.log("System Initialized Smoothly.");
+            console.log("Auth Engine Ready.");
         });
 
         auth.onAuthStateChanged(user => {
@@ -130,25 +120,16 @@
             }
         });
 
-        function checkUploadAccess() {
-            if(!currentUserSession) { toggleLoginDashboard(true); } 
-            else { alert("रास्ता साफ़ है! वीडियो अपलोड पैनल खुल रहा है..."); }
-        }
-
-        function checkProfileClick() {
-            if(!currentUserSession) { toggleLoginDashboard(true); } 
-            else { alert("अकाउंट एक्टिव है: " + currentUserSession.displayName); }
-        }
+        function checkUploadAccess() { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("पैनल चालू है!"); } }
+        function checkProfileClick() { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("लॉगिन एक्टिव: " + currentUserSession.displayName); } }
 
         function verifyUserAgeGateLimit() {
             const inputDate = document.getElementById('userBirthDateField').value;
             if(!inputDate) { alert("कृपया सही तारीख दर्ज करें!"); return; }
-            
             const birthDate = new Date(inputDate);
             const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            if(age < 13) {
-                alert("इस प्लेटफ़ॉर्म के लिए आपकी आयु कम से कम 13 वर्ष होनी चाहिए।");
+            if((today.getFullYear() - birthDate.getFullYear()) < 13) {
+                alert("आपकी आयु कम से कम 13 वर्ष होनी चाहिए।");
             } else {
                 localStorage.setItem('ms_user_dob', inputDate);
                 document.getElementById('dobVerificationModal').style.display = 'none';
@@ -167,7 +148,6 @@
             const vid = document.querySelector('video');
             if(vid) { document.body.addEventListener('click', () => { vid.muted = false; }, {once: true}); }
         }
-        
         if(localStorage.getItem('ms_user_dob')) { window.onload = initGlobalFeedPipeline; }
     </script>
 </body>

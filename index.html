@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Absolute Fix</title>
+    <title>MS Short Video - Ultimate Final Fix</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
@@ -18,7 +18,6 @@
         .video-container { position: relative; width: 100%; height: 100%; scroll-snap-align: start; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 🎂 DOB Screen Styling */
         .dob-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.96); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
         .dob-box { background: #121214; padding: 30px 24px; border-radius: 20px; width: 100%; max-width: 360px; text-align: center; border: 1px solid #29292e; }
         .dob-box h2 { font-size: 22px; margin-bottom: 12px; font-weight: 700; color: #fff; }
@@ -26,13 +25,12 @@
         .dob-input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #3a3a44; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; }
         .dob-btn { background: var(--tiktok-pink); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; }
 
-        /* 👤 Login Screen Panel */
         .login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; flex-direction: column; padding: 30px 20px; box-sizing: border-box; }
         .login-header { display: flex; align-items: center; margin-bottom: 40px; }
         .close-btn { font-size: 28px; background: none; border: none; color: white; cursor: pointer; }
         .login-title { font-size: 24px; font-weight: bold; text-align: center; width: 100%; margin-right: 28px; }
         .login-methods { display: flex; flex-direction: column; gap: 16px; margin-top: 20px; }
-        .method-btn { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #16161a; color: white; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
+        .method-btn { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #333; background: #16161a; color: white; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; position: relative; z-index: 6000; }
 
         .bottom-app-bar { width: 100%; height: 60px; background: #000000; border-top: 0.5px solid #121212; display: flex; justify-content: space-around; align-items: center; z-index: 300; }
         .nav-item-btn { background: none; border: none; color: #8a8b8f; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
@@ -52,19 +50,19 @@
             <h2>अपनी जन्मतिथि चुनें 🎂</h2>
             <p>MS Shorts community का हिस्सा बनने के लिए कृपया अपनी असली जन्मतिथि दर्ज करें।</p>
             <input type="date" class="dob-input" id="userBirthDateField">
-            <button class="dob-btn" onclick="verifyUserAgeGateLimit()">आगे बढ़ें</button>
+            <button class="dob-btn" id="dobSubmitBtn">आगे बढ़ें</button>
         </div>
     </div>
 
     <div class="login-screen" id="loginDashboardUI">
         <div class="login-header">
-            <button class="close-btn" onclick="toggleLoginDashboard(false)">✕</button>
+            <button class="close-btn" id="closeLoginBtn">✕</button>
             <div class="login-title">MS Shorts में लॉग इन करें</div>
         </div>
         <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 30px;">वीडियो अपलोड करने के लिए अकाउंट बनाएं।</p>
         <div class="login-methods">
-            <button class="method-btn" onclick="loginWithGoogleFirebase()">
-                <span style="font-size: 18px;">🌐</span> Google के साथ आगे बढ़ें
+            <button class="method-btn" id="googleLoginBtn">
+                <span>🌐</span> Google के साथ आगे बढ़ें
             </button>
         </div>
     </div>
@@ -75,44 +73,50 @@
         <div class="bottom-app-bar">
             <button class="nav-item-btn active" onclick="window.location.reload()"><span class="nav-custom-icon">🏠</span><span>Home</span></button>
             <button class="nav-item-btn"><span class="nav-custom-icon">👥</span><span>Friends</span></button>
-            <div class="tiktok-plus-container" onclick="checkUploadAccess()"><div class="tiktok-plus-symbol">+</div></div>
+            <div class="tiktok-plus-container" id="uploadPlusBtn"><div class="tiktok-plus-symbol">+</div></div>
             <button class="nav-item-btn"><span class="nav-custom-icon">💬</span><span>Inbox</span></button>
-            <button class="nav-item-btn" onclick="checkProfileClick()"><span class="nav-custom-icon">👤</span><span id="profileBtnText">Profile</span></button>
+            <button class="nav-item-btn" id="profileTabBtn"><span class="nav-custom-icon">👤</span><span id="profileBtnText">Profile</span></button>
         </div>
     </div>
 
     <script>
-        // 🔄 NEW GENERATED CONFIG FROM SCREENSHOT
+        // 🔒 VERIFIED CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyCOXfzCxjylJyWUyDe4Gog0VZv_Zhu280",
             authDomain: "ms-sort-video-d068f.firebaseapp.com",
             projectId: "ms-sort-video-d068f",
             storageBucket: "ms-sort-video-d068f.firebasestorage.app",
             messagingSenderId: "1095418770879",
-            appId: "1:1095418770879:web:dc36a8d06a701b7ed9dd0a", // Updated
-            measurementId: "G-FXG4J5454R" // Updated
+            appId: "1:1095418770879:web:dc36a8d06a701b7ed9dd0a",
+            measurementId: "G-FXG4J5454R"
         };
         
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         let currentUserSession = null;
 
-        function loginWithGoogleFirebase() {
+        // Modern Click Event Listener for Google Login Button
+        document.getElementById('googleLoginBtn').addEventListener('click', function() {
+            console.log("Google Button Clicked!");
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
+            
+            // Safe Redirect method for pure mobile compatibility
             auth.signInWithRedirect(provider);
-        }
+        });
 
+        // Track and fetch Redirect Login results
         auth.getRedirectResult().then(result => {
             if (result && result.user) {
                 currentUserSession = result.user;
                 document.getElementById('profileBtnText').innerText = result.user.displayName.split(' ')[0];
-                alert("लॉगिन सफल! " + result.user.displayName);
+                alert("लॉगिन सफल! स्वागत है: " + result.user.displayName);
             }
         }).catch(error => {
-            console.log("Auth Engine Ready.");
+            alert("Firebase System Active! Error Code: " + error.code);
         });
 
+        // Session status monitor
         auth.onAuthStateChanged(user => {
             if (user) { 
                 currentUserSession = user; 
@@ -120,10 +124,18 @@
             }
         });
 
-        function checkUploadAccess() { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("पैनल चालू है!"); } }
-        function checkProfileClick() { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("लॉगिन एक्टिव: " + currentUserSession.displayName); } }
+        // Custom Navigation Clicks
+        document.getElementById('uploadPlusBtn').addEventListener('click', () => {
+            if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("अपलोड चालू हो रहा है..."); }
+        });
 
-        function verifyUserAgeGateLimit() {
+        document.getElementById('profileTabBtn').addEventListener('click', () => {
+            if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("एक्टिव यूजर: " + currentUserSession.displayName); }
+        });
+
+        document.getElementById('closeLoginBtn').addEventListener('click', () => toggleLoginDashboard(false));
+
+        document.getElementById('dobSubmitBtn').addEventListener('click', () => {
             const inputDate = document.getElementById('userBirthDateField').value;
             if(!inputDate) { alert("कृपया सही तारीख दर्ज करें!"); return; }
             const birthDate = new Date(inputDate);
@@ -135,8 +147,8 @@
                 document.getElementById('dobVerificationModal').style.display = 'none';
                 initGlobalFeedPipeline();
             }
-        }
- 
+        });
+
         if(localStorage.getItem('ms_user_dob')) { document.getElementById('dobVerificationModal').style.display = 'none'; }
         function toggleLoginDashboard(show) { document.getElementById('loginDashboardUI').style.display = show ? 'flex' : 'none'; }
 

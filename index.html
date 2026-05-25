@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Firebase Powered</title>
+    <title>MS Short Video - Mobile Login Fixed</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
@@ -66,7 +66,7 @@
             <button class="method-btn" onclick="loginWithGoogleFirebase()">
                 <span style="font-size: 18px;">🌐</span> Google के साथ आगे बढ़ें
             </button>
-            <button class="method-btn" onclick="alert('Phone Auth Coming Soon!')">
+            <button class="method-btn" onclick="alert('Phone OTP System Beta mode mein hai, kripya Google use karein!')">
                 <span style="font-size: 18px;">📱</span> फोन नंबर का उपयोग करें
             </button>
         </div>
@@ -80,12 +80,12 @@
             <button class="nav-item-btn"><span class="nav-custom-icon">👥</span><span>Friends</span></button>
             <div class="tiktok-plus-container" onclick="checkUploadAccess()"><div class="tiktok-plus-symbol">+</div></div>
             <button class="nav-item-btn"><span class="nav-custom-icon">💬</span><span>Inbox</span></button>
-            <button class="nav-item-btn" onclick="toggleLoginDashboard(true)"><span class="nav-custom-icon">👤</span><span>Profile</span></button>
+            <button class="nav-item-btn" onclick="checkProfileClick()"><span class="nav-custom-icon">👤</span><span id="profileBtnText">Profile</span></button>
         </div>
     </div>
 
     <script>
-        // 🛠️ MEHNDI BHAI'S FIREBASE CONFIG KEY INTEGRATION
+        // 🔥 MEHNDI BHAI'S FIREBASE CONFIG KEY
         const firebaseConfig = {
             apiKey: "AIzaSyCOXfzCxjylJyWUyDe4Gog0VZv_Zhu280",
             authDomain: "ms-sort-video-d068f.firebaseapp.com",
@@ -99,25 +99,52 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Check if user is logged in
         let currentUserSession = null;
-        auth.onAuthStateChanged(user => {
-            if (user) { currentUserSession = user; }
+
+        // Mobile Friendly Redirect Result Tracker
+        auth.getRedirectResult().then(result => {
+            if (result && result.user) {
+                currentUserSession = result.user;
+                document.getElementById('profileBtnText').innerText = result.user.displayName.split(' ')[0];
+                alert("लॉगिन सफल! स्वागत है " + result.user.displayName);
+            }
+        }).catch(error => {
+            console.error("Redirect Error:", error);
+            if(error.code === "auth/operation-not-allowed") {
+                alert("कृपया Firebase Console में Google Login को ठीक से Save करना सुनिश्चित करें!");
+            } else {
+                alert("त्रुटि: " + error.message);
+            }
         });
 
+        // Monitor session changes
+        auth.onAuthStateChanged(user => {
+            if (user) { 
+                currentUserSession = user; 
+                document.getElementById('profileBtnText').innerText = user.displayName.split(' ')[0];
+            }
+        });
+
+        // 🚨 FIXED: Mobile Friendly Redirect Login Strategy
         function loginWithGoogleFirebase() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(result => {
-                alert("बधाई हो! Google Login सफल रहा: " + result.user.displayName);
-                toggleLoginDashboard(false);
-            }).catch(error => { alert("Login Fail: " + error.message); });
+            // Mobile pop-up block bypass karne ke liye direct redirect
+            auth.signInWithRedirect(provider);
         }
 
         function checkUploadAccess() {
             if(!currentUserSession) {
                 toggleLoginDashboard(true);
             } else {
-                alert("आप लॉग इन हैं! वीडियो अपलोड सिस्टम ओपन हो रहा है...");
+                alert("लॉगिन कन्फर्म! वीडियो अपलोड करने का रास्ता खुल गया है...");
+            }
+        }
+
+        function checkProfileClick() {
+            if(!currentUserSession) {
+                toggleLoginDashboard(true);
+            } else {
+                alert("आप पहले से लॉग इन हैं: " + currentUserSession.displayName);
             }
         }
 

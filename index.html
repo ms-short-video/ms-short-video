@@ -50,7 +50,6 @@
         .tiktok-plus-container::after { content: ''; position: absolute; top: 0; right: -3px; width: 100%; height: 100%; background: var(--tiktok-pink); border-radius: 8px; z-index: -2; }
         .tiktok-plus-symbol { color: #000; font-size: 22px; font-weight: bold; }
 
-        /* 📹 Gallery Custom Upload Style */
         .file-upload-label { background: #222; border: 2px dashed #444; padding: 25px; border-radius: 12px; text-align: center; color: #aaa; cursor: pointer; font-size: 14px; }
         .file-upload-label:active { border-color: var(--tiktok-pink); color: #fff; }
         #statusMessage { text-align: center; font-size: 13px; color: var(--tiktok-cyan); margin-top: 5px; }
@@ -74,7 +73,7 @@
         </div>
         <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 20px;">दुनिया में कहीं से भी सुरक्षित रूप से लॉग इन करें</p>
         
-        <div class="login-methods">
+        <div class="login-methods" id="mainMethodButtons">
             <button class="method-btn" id="googleLoginBtn">🌐 Google के साथ आगे बढ़ें</button>
             <button class="method-btn" id="triggerEmailPanelBtn">✉️ Email / Password उपयोग करें</button>
             <button class="method-btn" id="triggerPhonePanelBtn">📱 Phone Number OTP</button>
@@ -147,18 +146,21 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             const dropdown = document.getElementById('countryCodeSelect');
-            globalCountryDatabase.forEach(item => {
-                let option = document.createElement('option');
-                option.value = item.code;
-                option.textContent = `${item.name} [${item.code}]`;
-                dropdown.appendChild(option);
-            });
+            if(dropdown) {
+                globalCountryDatabase.forEach(item => {
+                    let option = document.createElement('option');
+                    option.value = item.code;
+                    option.textContent = `${item.name} [${item.code}]`;
+                    dropdown.appendChild(option);
+                });
+            }
         });
 
         document.getElementById('triggerEmailPanelBtn').addEventListener('click', () => toggleAuthInputPanels('emailPanel'));
         document.getElementById('triggerPhonePanelBtn').addEventListener('click', () => toggleAuthInputPanels('phonePanel'));
 
         function toggleAuthInputPanels(activePanelId) {
+            document.getElementById('mainMethodButtons').style.display = 'none';
             document.getElementById('emailPanel').style.display = 'none';
             document.getElementById('phonePanel').style.display = 'none';
             document.getElementById('videoUploadPanel').style.display = 'none';
@@ -170,8 +172,11 @@
 
         document.getElementById('googleLoginBtn').addEventListener('click', function() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            provider.setCustomParameters({ prompt: 'select_account' });
-            auth.signInWithRedirect(provider);
+            auth.signInWithPopup(provider).then(result => {
+                if (result.user) { refreshUserAuthSession(result.user); }
+            }).catch(err => {
+                auth.signInWithRedirect(provider);
+            });
         });
 
         auth.getRedirectResult().then(result => { if (result && result.user) { refreshUserAuthSession(result.user); } });
@@ -205,12 +210,21 @@
             document.getElementById('profileBtnText').innerText = user.displayName ? user.displayName.split(' ')[0] : "User";
             toggleLoginDashboard(false);
         }
-        auth.onAuthStateChanged(user => { if (user) refreshUserAuthSession(user); });
+        
+        auth.onAuthStateChanged(user => { 
+            if (user) { 
+                refreshUserAuthSession(user); 
+            } else {
+                currentUserSession = null;
+                document.getElementById('profileBtnText').innerText = "Profile";
+            }
+        });
 
         // 🔘 Upload Plus Click Engine
         document.getElementById('uploadPlusBtn').addEventListener('click', () => {
-            if(!currentUserSession) { toggleLoginDashboard(true); } 
-            else {
+            if(!currentUserSession) { 
+                toggleLoginDashboard(true); 
+            } else {
                 toggleLoginDashboard(true);
                 toggleAuthInputPanels('videoUploadPanel');
             }
@@ -234,9 +248,8 @@
 
             const formData = new FormData();
             formData.append('file', selectedVideoFile);
-            formData.append('upload_preset', 'ms_shorts_preset'); // Free Public Folder
+            formData.append('upload_preset', 'ms_shorts_preset');
 
-            // Direct Anonymous High-Speed Streaming API
             fetch('https://api.cloudinary.com/v1_1/dxtv6f7zp/video/upload', {
                 method: 'POST',
                 body: formData
@@ -253,12 +266,18 @@
                 }
             })
             .catch(() => {
-                alert("सर्वर सिंक पूरा हुआ! वीडियो रीलोड हो रहा है...");
                 window.location.reload();
             });
         });
 
-        document.getElementById('profileTabBtn').addEventListener('click', () => { if(!currentUserSession) toggleLoginDashboard(true); });
+        document.getElementById('profileTabBtn').addEventListener('click', () => { 
+            if(!currentUserSession) {
+                toggleLoginDashboard(true); 
+            } else {
+                alert("आप पहले से लॉग इन हैं: " + currentUserSession.email || "User");
+            }
+        });
+        
         document.getElementById('closeLoginBtn').addEventListener('click', () => toggleLoginDashboard(false));
 
         document.getElementById('dobSubmitBtn').addEventListener('click', () => {
@@ -268,7 +287,17 @@
         });
 
         if(localStorage.getItem('ms_user_dob')) { document.getElementById('dobVerificationModal').style.display = 'none'; }
-        function toggleLoginDashboard(show) { document.getElementById('loginDashboardUI').style.display = show ? 'flex' : 'none'; }
+        
+        function toggleLoginDashboard(show) { 
+            document.getElementById('loginDashboardUI').style.display = show ? 'flex' : 'none'; 
+            if(show) {
+                document.getElementById('mainMethodButtons').style.display = 'flex';
+                document.getElementById('emailPanel').style.display = 'none';
+                document.getElementById('phonePanel').style.display = 'none';
+                document.getElementById('videoUploadPanel').style.display = currentUserSession ? 'flex' : 'none';
+                if(currentUserSession) { document.getElementById('mainMethodButtons').style.display = 'none'; }
+            }
+        }
 
         function initGlobalFeedPipeline() {
             const defaultVideo = "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-taking-a-selfie-42998-large.mp4";

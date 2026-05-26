@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MS Shorts - Creative Studio</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
     <style>
         :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --glass-bg: rgba(22, 22, 26, 0.7); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
@@ -16,7 +20,7 @@
         
         /* Premium Upload Box Layout */
         .glass-drop-card { background: var(--glass-bg); border: 2px dashed #3f3f46; border-radius: 24px; padding: 50px 20px; text-align: center; cursor: pointer; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .glass-drop-card:active, .glass-drop-card.dragover { border-color: var(--tiktok-cyan); background: rgba(37, 244, 238, 0.05); }
+        .glass-drop-card:active { border-color: var(--tiktok-cyan); background: rgba(37, 244, 238, 0.05); }
         
         .upload-glowing-circle { width: 70px; height: 70px; background: rgba(254, 44, 85, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px; border: 1px solid rgba(254, 44, 85, 0.2); font-size: 32px; box-shadow: 0 0 20px rgba(254, 44, 85, 0.1); }
         .upload-main-text { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #fff; }
@@ -57,6 +61,17 @@
     </div>
 
     <script>
+        // Firebase Configured Node
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6Hvm7sNfG-2Z-caXGmzPc_iSQUL-Evxw",
+            authDomain: "ms-sort-video-c38c4.firebaseapp.com",
+            projectId: "ms-sort-video-c38c4",
+            storageBucket: "ms-sort-video-c38c4.appspot.com",
+            messagingSenderId: "570928313504",
+            appId: "1:570928313504:web:7976dd9754fe1fa2e8c5c5"
+        };
+        firebase.initializeApp(firebaseConfig);
+
         let selectedFileAsset = null;
         const selector = document.getElementById('videoFileSelector');
         const submitBtn = document.getElementById('submitUploadActionBtn');

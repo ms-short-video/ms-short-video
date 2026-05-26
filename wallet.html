@@ -1,58 +1,185 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Shorts - Balance Dashboard</title>
-    <style>
-        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --tile-dark: #1c1c1e; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
-        .wallet-shell { width: 100%; max-width: 450px; height: 100vh; background: #0a0a0c; position: relative; padding: 24px; display: flex; flex-direction: column; }
-        
-        .header-bar { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; margin-top: 10px; }
-        .back-link { font-size: 24px; color: #fff; text-decoration: none; }
-        
-        .balance-hero-card { background: linear-gradient(145deg, #1f1f24 0%, #141416 100%); border-radius: 24px; padding: 30px 20px; border: 1px solid #2c2c30; text-align: center; margin-bottom: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
-        .coins-count-text { font-size: 42px; font-weight: 900; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
-        .currency-equivalent-subtext { font-size: 14px; color: #71717a; font-weight: 500; }
-        
-        .panel-tile-grid { background: var(--tile-dark); border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #2c2c32; }
-        .tile-action-title { font-size: 14px; font-weight: 600; }
-        .tile-status-pill { font-size: 12px; background: rgba(37, 244, 238, 0.1); color: var(--tiktok-cyan); padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        
-        .payout-btn { background: var(--tiktok-pink); color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 14px; cursor: pointer; width: 100%; margin-top: auto; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(254, 44, 85, 0.3); }
-    </style>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>MS Profile</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+font-family:Arial;
+color:white;
+}
+
+.profile{
+
+padding:20px;
+text-align:center;
+
+}
+
+.profile img{
+
+width:100px;
+height:100px;
+border-radius:50%;
+margin-top:20px;
+
+}
+
+.username{
+
+font-size:25px;
+margin-top:15px;
+font-weight:bold;
+
+}
+
+.bio{
+
+color:gray;
+margin-top:10px;
+
+}
+
+.stats{
+
+display:flex;
+justify-content:center;
+gap:40px;
+margin-top:25px;
+
+}
+
+.stat h2{
+
+margin:0;
+
+}
+
+button{
+
+margin-top:25px;
+padding:12px 30px;
+border:none;
+border-radius:10px;
+background:#ff0050;
+color:white;
+font-size:16px;
+font-weight:bold;
+
+}
+
+.videoGrid{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:5px;
+padding:10px;
+margin-top:30px;
+
+}
+
+.videoGrid video{
+
+width:100%;
+height:250px;
+object-fit:cover;
+
+}
+
+</style>
+
 </head>
+
 <body>
-    <div class="wallet-shell">
-        <div class="header-bar">
-            <a href="index.html" class="back-link">←</a>
-            <h3 style="font-size:18px; font-weight:800;">Balance & Earnings</h3>
-        </div>
 
-        <div class="balance-hero-card">
-            <div class="coins-count-text">🪙 <span id="coinBalanceDisplay">0</span></div>
-            <div class="currency-equivalent-subtext">Estimated Diamonds Value: <span id="cashValueDisplay" style="color:var(--tiktok-cyan); font-weight:bold;">₹0.00</span></div>
-        </div>
+<div class="profile">
 
-        <div class="panel-tile-grid"><div class="tile-action-title">Live Gifts Monetization</div><div class="tile-status-pill">Active Verified</div></div>
-        <div class="panel-tile-grid"><div class="tile-action-title">Creator Rewards Program</div><div class="tile-status-pill">Enrolled</div></div>
+<img
+src="https://i.imgur.com/6VBx3io.png">
 
-        <button class="payout-btn" onclick="processPayout()">Withdraw Creator Cash</button>
-    </div>
+<div class="username">
 
-    <script>
-        window.onload = () => {
-            const currentCoins = parseInt(localStorage.getItem('wallet_bal')) || 0;
-            document.getElementById('coinBalanceDisplay').innerText = currentCoins;
-            document.getElementById('cashValueDisplay').innerText = "₹" + (currentCoins * 0.45).toFixed(2);
-        };
+@ms_official
 
-        function processPayout() {
-            const amt = localStorage.getItem('wallet_bal');
-            alert(`💸 Payout Request Received! Processing settlement node routing ₹${(parseInt(amt)*0.45).toFixed(2)} directly to your linked account.`);
-        }
-    </script>
+</div>
+
+<div class="bio">
+
+🔥 MS SHORT VIDEO CREATOR
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+
+<h2>120</h2>
+
+<p>Following</p>
+
+</div>
+
+<div class="stat">
+
+<h2>5K</h2>
+
+<p>Followers</p>
+
+</div>
+
+<div class="stat">
+
+<h2>30K</h2>
+
+<p>Likes</p>
+
+</div>
+
+</div>
+
+<button onclick="loginUser()">
+
+LOGIN
+
+</button>
+
+</div>
+
+<div class="videoGrid">
+
+<video
+src="https://www.w3schools.com/html/mov_bbb.mp4"
+controls>
+</video>
+
+<video
+src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+controls>
+</video>
+
+</div>
+
+<script>
+
+function loginUser(){
+
+alert(
+"✅ Login System Coming Soon"
+);
+
+}
+
+</script>
+
 </body>
 </html>

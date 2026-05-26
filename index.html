@@ -3,153 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Shorts - Premium Home</title>
+    <title>MS LOGIN PANEL</title>
+    
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <style>
-        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --panel-dark: #121214; }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body, html { background: #000; height: 100%; width: 100%; overflow: hidden; font-family: -apple-system, sans-serif; color: #fff; }
-        
-        .app-shell { position: relative; width: 100%; max-width: 450px; height: 100%; background: #000; display: flex; flex-direction: column; margin: 0 auto; }
-        .video-viewport { width: 100%; height: calc(100% - 65px); position: relative; background: #000; }
-        video { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Sidebar Elements */
-        .interaction-sidebar { position: absolute; right: 15px; bottom: 90px; display: flex; flex-direction: column; gap: 22px; z-index: 100; align-items: center; }
-        .action-icon-btn { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; font-size: 28px; cursor: pointer; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
-        .action-icon-btn span { font-size: 11px; font-weight: 600; margin-top: 4px; }
-        
-        /* Floating Bottom Dock (Hamesha Niche Fixed) */
-        .bottom-navigation-dock { width: 100%; height: 65px; background: rgba(0,0,0,0.95); border-top: 0.5px solid #1a1a22; display: flex; justify-content: space-around; align-items: center; position: absolute; bottom: 0; left: 0; z-index: 9999; }
-        .dock-tab-btn { background: none; border: none; color: #a6a7ab; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 20%; text-decoration: none; }
-        .dock-tab-btn.active { color: #ffffff; }
-        
-        .center-plus-trigger { position: relative; width: 45px; height: 28px; background: #fff; border-radius: 7px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-        .center-plus-trigger::before { content: ''; position: absolute; top: 0; left: -3px; width: 100%; height: 100%; background: var(--tiktok-cyan); border-radius: 7px; z-index: -1; }
-        .center-plus-trigger::after { content: ''; position: absolute; top: 0; right: -3px; width: 100%; height: 100%; background: var(--tiktok-pink); border-radius: 7px; z-index: -2; }
 
-        /* Elegant Login Gate */
-        .fullscreen-gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); z-index: 10005; display: flex; flex-direction: column; justify-content: center; padding: 20px; }
-        .gate-card { background: var(--panel-dark); padding: 30px 24px; border-radius: 24px; width: 100%; text-align: center; border: 1px solid #22222b; }
-        .system-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #2c2c35; background: #09090b; color: #fff; font-size: 16px; margin-bottom: 15px; text-align: center; outline: none; }
-        .system-btn { background: var(--tiktok-pink); color: #fff; border: none; padding: 15px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; width: 100%; }
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .loginBox {
+            width: 90%;
+            max-width: 400px;
+            background: #111;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
         
-        /* Gift Section */
-        .gift-drawer { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(18, 18, 20, 0.99); border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px; z-index: 10001; display: none; flex-direction: column; border-top: 1px solid #2c2c35; }
-        .gift-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
-        .gift-card { background: #1f1f23; padding: 15px 5px; border-radius: 14px; text-align: center; cursor: pointer; border: 1px solid transparent; }
+        input:focus {
+            border-color: #ff0050;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            border: none;
+            border-radius: 12px;
+            background: #ff0050;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 0, 80, 0.2);
+            transition: background 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        a {
+            color: #ff0050;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        #statusLogger {
+            text-align: center;
+            font-size: 14px;
+            color: #25f4ee;
+            margin-top: 15px;
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
-    <div class="app-shell">
-        <div class="video-viewport" id="videoViewportEngine"></div>
+
+    <div class="loginBox">
+        <h1>MS LOGIN</h1>
         
-        <div class="interaction-sidebar">
-            <button class="action-icon-btn" onclick="document.getElementById('likeCount').innerText='14.3K'">❤️ <span id="likeCount">14.2K</span></button>
-            <button class="action-icon-btn" onclick="toggleGiftDrawer(true)">🎁 <span>Gifts</span></button>
-            <button class="action-icon-btn" onclick="alert('Live Streaming Node connecting via Agora CDN...')">📡 <span style="color:var(--tiktok-pink)">LIVE</span></button>
-        </div>
+        <input type="email" id="email" placeholder="Enter Email">
+        <input type="password" id="password" placeholder="Enter Password">
+        
+        <button onclick="loginUser()">LOGIN</button>
+        
+        <div id="statusLogger"></div>
 
-        <div class="bottom-navigation-dock">
-            <a href="index.html" class="dock-tab-btn active"><span>🏠</span><span style="margin-top:4px;">Home</span></a>
-            <button class="dock-tab-btn" onclick="handleWalletRoute()"><span>💰</span><span style="margin-top:4px;">Wallet</span></button>
-            <div class="center-plus-trigger" onclick="handleUploadRoute()"><div style="color:#000; font-weight:800; font-size:20px;">+</div></div>
-            <button class="dock-tab-btn" onclick="alert('Inbox is fully updated!')"><span>💬</span><span style="margin-top:4px;">Inbox</span></button>
-            <button class="dock-tab-btn" id="profileTabBtn"><span>👤</span><span id="profileTabText" style="margin-top:4px;">Profile</span></button>
-        </div>
-
-        <div class="fullscreen-gate" id="authGate" style="display:none;">
-            <div class="gate-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h3>MS Shorts Login Gate</h3>
-                    <button onclick="document.getElementById('authGate').style.display='none'" style="background:none; border:none; color:#fff; font-size:22px;">✕</button>
-                </div>
-                <button class="system-btn" id="googleAuthBtn" style="background:#fff; color:#000; margin-bottom:15px; font-weight:bold;">🌐 Google Sign In</button>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <input type="email" id="emailIn" class="system-input" placeholder="Email Address">
-                    <input type="password" id="passIn" class="system-input" placeholder="Password">
-                    <button class="system-btn" id="emailAuthBtn">Login / Signup</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="gift-drawer" id="giftDrawer">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h5>Send Virtual Coins Gift 🎁</h5>
-                <button onclick="toggleGiftDrawer(false)" style="background:none; border:none; color:#fff; font-size:18px;">✕</button>
-            </div>
-            <div class="gift-grid">
-                <div class="gift-card" onclick="sendGift('Rose', 10)"><div>🌹</div><div style="font-size:11px; color:var(--tiktok-cyan);">10 Coins</div></div>
-                <div class="gift-card" onclick="sendGift('Crown', 100)"><div>👑</div><div style="font-size:11px; color:var(--tiktok-cyan);">100 Coins</div></div>
-                <div class="gift-card" onclick="sendGift('Rocket', 500)"><div>🚀</div><div style="font-size:11px; color:var(--tiktok-cyan);">500 Coins</div></div>
-            </div>
-        </div>
+        <p>Don't have account? <a href="#" onclick="loginUser()">Sign Up Engine</a></p>
     </div>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyC6Hvm7sNfG-2Z-caXGmzPc_iSQUL-Evxw", authDomain: "ms-sort-video-c38c4.firebaseapp.com", projectId: "ms-sort-video-c38c4", storageBucket: "ms-sort-video-c38c4.appspot.com", messagingSenderId: "570928313504", appId: "1:570928313504:web:7976dd9754fe1fa2e8c5c5" };
+        // High-Quality Verified Firebase Bridge Credentials
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6Hvm7sNfG-2Z-caXGmzPc_iSQUL-Evxw",
+            authDomain: "ms-sort-video-c38c4.firebaseapp.com",
+            projectId: "ms-sort-video-c38c4",
+            storageBucket: "ms-sort-video-c38c4.appspot.com",
+            messagingSenderId: "570928313504",
+            appId: "1:570928313504:web:7976dd9754fe1fa2e8c5c5"
+        };
+        
+        // Initialize Core Firebase Stack Node
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        let userInstance = null;
 
-        if(!localStorage.getItem('wallet_bal')) localStorage.setItem('wallet_bal', '1000');
+        function loginUser() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+            const logger = document.getElementById("statusLogger");
 
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                userInstance = user;
-                localStorage.setItem('auth_sync', 'true');
-                document.getElementById('profileTabText').innerText = user.displayName ? user.displayName.split(' ')[0] : "Active";
-            } else {
-                userInstance = null;
-                localStorage.removeItem('auth_sync');
-                document.getElementById('profileTabText').innerText = "Profile";
+            if(email === "" || password === "") {
+                alert("Fill all fields");
+                return;
             }
-        });
+            if(password.length < 6) {
+                alert("Password target sequence must be minimum 6 characters!");
+                return;
+            }
 
-        function handleUploadRoute() {
-            if(localStorage.getItem('auth_sync')) window.location.href = "upload.html";
-            else document.getElementById('authGate').style.display = 'flex';
+            logger.innerText = "Securing Identity Verification... ⏳";
+
+            // Anti-Loop Dynamic Execution
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    localStorage.setItem('auth_sync_flag', 'true');
+                    logger.innerText = "Authentication Success! Redirecting... 🎉";
+                    setTimeout(() => {
+                        window.location.href = "index.html";
+                    }, 1000);
+                })
+                .catch((error) => {
+                    // System checks if user does not exist, auto creates channel
+                    if (error.code === 'auth/user-not-found') {
+                        logger.innerText = "Creating Global New Account... 🚀";
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then(() => {
+                                localStorage.setItem('auth_sync_flag', 'true');
+                                logger.innerText = "Account Provisioned! Routing Home... ✨";
+                                setTimeout(() => { window.location.href = "index.html"; }, 1000);
+                            })
+                            .catch(e => {
+                                alert("Signup Fault: " + e.message);
+                                logger.innerText = "";
+                            });
+                    } else {
+                        alert("Error Stream Interrupt: " + error.message);
+                        logger.innerText = "";
+                    }
+                });
         }
-        
-        function handleWalletRoute() {
-            if(localStorage.getItem('auth_sync')) window.location.href = "wallet.html";
-            else document.getElementById('authGate').style.display = 'flex';
-        }
-
-        document.getElementById('profileTabBtn').addEventListener('click', () => {
-            if(!userInstance) document.getElementById('authGate').style.display = 'flex';
-            else window.location.href = "wallet.html";
-        });
-
-        document.getElementById('googleAuthBtn').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).then(() => location.reload()).catch(() => auth.signInWithRedirect(provider));
-        });
-
-        document.getElementById('emailAuthBtn').addEventListener('click', () => {
-            const email = document.getElementById('emailIn').value.trim();
-            const pass = document.getElementById('passIn').value;
-            auth.signInWithEmailAndPassword(email, pass).then(() => location.reload()).catch(() => {
-                auth.createUserWithEmailAndPassword(email, pass).then(() => location.reload());
-            });
-        });
-
-        function toggleGiftDrawer(show) { document.getElementById('giftDrawer').style.display = show ? 'flex' : 'none'; }
-        function sendGift(name, cost) {
-            let bal = parseInt(localStorage.getItem('wallet_bal'));
-            if(bal < cost) { alert("Balance low!"); return; }
-            bal -= cost; localStorage.setItem('wallet_bal', bal.toString());
-            toggleGiftDrawer(false); alert(`Sent ${name}! ${cost} Coins deducted.`);
-        }
-
-        window.onload = () => {
-            const def = "https://assets.mixkit.co/videos/preview/mixkit-girl-in-neon-sign-light-taking-a-selfie-42998-large.mp4";
-            const currentVideo = localStorage.getItem('ms_custom_video_feed') || def;
-            document.getElementById('videoViewportEngine').innerHTML = `<video loop playsinline autoplay muted src="${currentVideo}"></video>`;
-            const v = document.querySelector('video');
-            if(v) document.body.addEventListener('click', () => v.muted = false, {once:true});
-        };
     </script>
 </body>
 </html>

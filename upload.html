@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MS Shorts - Creative Studio</title>
+    <style>
+        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --glass-bg: rgba(22, 22, 26, 0.7); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        body { background: linear-gradient(135deg, #09090b 0%, #18181b 100%); height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
+        .studio-shell { width: 100%; max-width: 450px; height: 100vh; background: rgba(0, 0, 0, 0.85); position: relative; padding: 24px; display: flex; flex-direction: column; border: 1px solid #27272a; }
+        
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; margin-top: 10px; }
+        .back-btn { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; text-decoration: none; }
+        .studio-title { font-size: 20px; font-weight: 800; background: linear-gradient(to right, #fff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Premium Upload Box Layout */
+        .glass-drop-card { background: var(--glass-bg); border: 2px dashed #3f3f46; border-radius: 24px; padding: 50px 20px; text-align: center; cursor: pointer; position: relative; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(12px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .glass-drop-card:active, .glass-drop-card.dragover { border-color: var(--tiktok-cyan); background: rgba(37, 244, 238, 0.05); }
+        
+        .upload-glowing-circle { width: 70px; height: 70px; background: rgba(254, 44, 85, 0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; margin: 0 auto 20px; border: 1px solid rgba(254, 44, 85, 0.2); font-size: 32px; box-shadow: 0 0 20px rgba(254, 44, 85, 0.1); }
+        .upload-main-text { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+        .upload-sub-text { font-size: 12px; color: #71717a; margin-bottom: 20px; }
+        
+        .browse-pill-btn { background: rgba(255,255,255,0.08); padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 600; display: inline-block; border: 1px solid rgba(255,255,255,0.1); transition: background 0.2s; }
+        
+        .studio-input-node { background: var(--glass-bg); border: 1px solid #27272a; border-radius: 14px; padding: 16px; width: 100%; color: #fff; font-size: 15px; margin-top: 20px; outline: none; backdrop-filter: blur(12px); }
+        .studio-input-node:focus { border-color: var(--tiktok-pink); }
+        
+        /* Glowing Linear Action Button */
+        .publish-btn-engine { margin-top: auto; margin-bottom: 20px; background: linear-gradient(90deg, var(--tiktok-pink) 0%, #d91b4c 100%); color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 14px; cursor: pointer; width: 100%; box-shadow: 0 8px 24px rgba(254, 44, 85, 0.35); transition: all 0.2s; }
+        .publish-btn-engine:active { transform: scale(0.98); box-shadow: 0 4px 12px rgba(254, 44, 85, 0.2); }
+        
+        #pulseStatus { text-align: center; font-size: 14px; font-weight: 600; color: var(--tiktok-cyan); margin-top: 15px; min-height: 20px; }
+    </style>
+</head>
+<body>
+    <div class="studio-shell">
+        <div class="header-section">
+            <a href="index.html" class="back-btn">✕</a>
+            <div class="studio-title">Upload Studio</div>
+            <div style="width:20px;"></div>
+        </div>
+
+        <label for="videoFileSelector" class="glass-drop-card" id="dropCard">
+            <div class="upload-glowing-circle">🎬</div>
+            <div class="upload-main-text" id="pickerMainText">Select HD Short Video</div>
+            <div class="upload-sub-text">MP4, MOV or High-Res Video Formats</div>
+            <div class="browse-pill-btn">Browse Files</div>
+            <input type="file" id="videoFileSelector" accept="video/*" style="display:none;">
+        </label>
+
+        <input type="text" class="studio-input-node" placeholder="Write a catchy caption... #viral #mshorts">
+        
+        <div id="pulseStatus"></div>
+        <button class="publish-btn-engine" id="submitUploadActionBtn" style="display:none;">Publish to Feed</button>
+    </div>
+
+    <script>
+        let selectedFileAsset = null;
+        const selector = document.getElementById('videoFileSelector');
+        const submitBtn = document.getElementById('submitUploadActionBtn');
+        const statusText = document.getElementById('pulseStatus');
+
+        selector.addEventListener('change', (e) => {
+            selectedFileAsset = e.target.files[0];
+            if(selectedFileAsset) {
+                document.getElementById('pickerMainText').innerText = selectedFileAsset.name.substring(0, 22) + "...";
+                submitBtn.style.display = 'block';
+                document.getElementById('dropCard').style.borderColor = "var(--tiktok-pink)";
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            if(!selectedFileAsset) return;
+            submitBtn.style.display = 'none';
+            statusText.innerText = "Processing Ultra-HD Transcoding Node... ⏳";
+
+            const dataStream = new FormData();
+            dataStream.append('file', selectedFileAsset);
+            dataStream.append('upload_preset', 'ms_shorts_preset');
+
+            fetch('https://api.cloudinary.com/v1_1/dxtv6f7zp/video/upload', {
+                method: 'POST',
+                body: dataStream
+            })
+            .then(res => res.json())
+            .then(parsedRes => {
+                if(parsedRes.secure_url) {
+                    localStorage.setItem('ms_custom_video_feed', parsedRes.secure_url);
+                    statusText.innerText = "Video Live Stream Ready! Redirecting... 🎉";
+                    setTimeout(() => { window.location.href = "index.html"; }, 1200);
+                } else {
+                    alert("Error: " + parsedRes.error.message);
+                    submitBtn.style.display = 'block';
+                    statusText.innerText = "";
+                }
+            })
+            .catch(() => { window.location.href = "index.html"; });
+        });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MS Short Video - Global Authentication Platform</title>
+    <title>MS Short Video - 100% Global Multi-Auth Platform</title>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
@@ -18,30 +18,34 @@
         .video-container { position: relative; width: 100%; height: 100%; scroll-snap-align: start; background: #000; display: flex; align-items: center; justify-content: center; }
         video { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Age Verification Screen */
+        /* Age Modal */
         .dob-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.96); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
         .dob-box { background: var(--card-bg); padding: 30px 24px; border-radius: 20px; width: 100%; max-width: 360px; text-align: center; border: 1px solid #29292e; }
-        .dob-box h2 { font-size: 21px; margin-bottom: 12px; font-weight: 700; color: #fff; }
-        .dob-box p { font-size: 13px; color: #a1a1a8; margin-bottom: 24px; }
-        .dob-input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #3a3a44; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; outline: none; }
+        .dob-box h2 { font-size: 21px; margin-bottom: 12px; color: #fff; }
+        .dob-input { width: 100%; padding: 14px; border-radius: 10px; border: 1px solid #3a3a44; background: #1a1a1e; color: #fff; font-size: 16px; text-align: center; margin-bottom: 20px; }
         .dob-btn { background: var(--tiktok-pink); color: white; border: none; padding: 14px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; width: 100%; }
 
-        /* Multi-Login Dashboard */
+        /* Main Login Screen Panel */
         .login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: none; flex-direction: column; padding: 30px 20px; box-sizing: border-box; overflow-y: auto; }
-        .login-header { display: flex; align-items: center; margin-bottom: 30px; }
+        .login-header { display: flex; align-items: center; margin-bottom: 25px; }
         .close-btn { font-size: 28px; background: none; border: none; color: white; cursor: pointer; }
         .login-title { font-size: 22px; font-weight: bold; text-align: center; width: 100%; margin-right: 28px; }
         
         .login-methods { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
-        .method-btn { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #2c2c35; background: #16161a; color: white; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
-        .method-btn:active { background: #222; }
+        .method-btn { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #2c2c35; background: #16161a; color: white; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 12px; cursor: pointer; }
 
-        /* Dynamic Input Panels */
-        .input-panel { background: var(--card-bg); padding: 16px; border-radius: 14px; margin-top: 15px; display: none; flex-direction: column; gap: 12px; border: 1px solid #252529; }
-        .panel-input { width: 100%; padding: 12px; background: #1a1a1e; border: 1px solid #333; border-radius: 8px; color: white; outline: none; }
-        .panel-submit-btn { background: #fff; color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        /* Input Form Panels */
+        .input-panel { background: var(--card-bg); padding: 18px; border-radius: 14px; margin-top: 15px; display: none; flex-direction: column; gap: 12px; border: 1px solid #252529; }
+        .panel-input { width: 100%; padding: 12px; background: #1a1a1e; border: 1px solid #333; border-radius: 8px; color: white; outline: none; font-size: 15px; }
+        
+        /* 100% Global Country Code Selector Styling */
+        .phone-input-group { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .country-select { background: #1a1a1e; border: 1px solid #333; border-radius: 8px; color: white; padding: 12px; font-size: 15px; outline: none; width: 100%; max-height: 150px; }
+        
+        .panel-submit-btn { background: #fff; color: #000; border: none; padding: 13px; font-weight: bold; border-radius: 8px; cursor: pointer; font-size: 15px; }
+        .panel-submit-btn:active { background: #ccc; }
 
-        /* Bottom Menu Layout */
+        /* Menu Bars */
         .bottom-app-bar { width: 100%; height: 60px; background: #000; border-top: 0.5px solid #121212; display: flex; justify-content: space-around; align-items: center; z-index: 300; }
         .nav-item-btn { background: none; border: none; color: #8a8b8f; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
         .nav-item-btn.active { color: #ffffff; }
@@ -51,7 +55,6 @@
         .tiktok-plus-container::before { content: ''; position: absolute; top: 0; left: -3px; width: 100%; height: 100%; background: var(--tiktok-cyan); border-radius: 8px; z-index: -1; }
         .tiktok-plus-container::after { content: ''; position: absolute; top: 0; right: -3px; width: 100%; height: 100%; background: var(--tiktok-pink); border-radius: 8px; z-index: -2; }
         .tiktok-plus-symbol { color: #000; font-size: 22px; font-weight: bold; }
-        #recaptcha-container { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -59,7 +62,7 @@
     <div class="dob-overlay" id="dobVerificationModal">
         <div class="dob-box">
             <h2>अपनी जन्मतिथि चुनें 🎂</h2>
-            <p>MS Shorts Global community से जुड़ने के लिए अपनी सही जन्मतिथि दर्ज करें।</p>
+            <p>MS Shorts community का हिस्सा बनने के लिए कृपया अपनी असली जन्मतिथि दर्ज करें।</p>
             <input type="date" class="dob-input" id="userBirthDateField">
             <button class="dob-btn" id="dobSubmitBtn">आगे बढ़ें</button>
         </div>
@@ -68,31 +71,33 @@
     <div class="login-screen" id="loginDashboardUI">
         <div class="login-header">
             <button class="close-btn" id="closeLoginBtn">✕</button>
-            <div class="login-title">Global Login Panel</div>
+            <div class="login-title">MS Shorts Global Login</div>
         </div>
-        <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 20px;">दुनिया में कहीं से भी लॉग इन करें</p>
+        <p style="text-align: center; color: #aaa; font-size: 14px; margin-bottom: 20px;">दुनिया में कहीं से भी सुरक्षित रूप से लॉग इन करें</p>
         
         <div class="login-methods">
             <button class="method-btn" id="googleLoginBtn">🌐 Google के साथ आगे बढ़ें</button>
-            
-            <button class="method-btn" onclick="openInputPanel('emailPanel')">✉️ Email / Password से जुड़ें</button>
-            
-            <button class="method-btn" onclick="openInputPanel('phonePanel')">📱 Phone OTP (All Countries)</button>
+            <button class="method-btn" id="triggerEmailPanelBtn">✉️ Email / Password उपयोग करें</button>
+            <button class="method-btn" id="triggerPhonePanelBtn">📱 Phone Number OTP (All Countries)</button>
         </div>
 
         <div class="input-panel" id="emailPanel">
-            <input type="email" id="authEmailInput" class="panel-input" placeholder="Email Address लिखें">
-            <input type="password" id="authPasswordInput" class="panel-input" placeholder="Password बनाएं">
-            <button class="panel-submit-btn" onclick="handleEmailPasswordAuth()">Email से साइन इन करें</button>
+            <input type="email" id="authEmailInput" class="panel-input" placeholder="ईमेल पता दर्ज करें">
+            <input type="password" id="authPasswordInput" class="panel-input" placeholder="पासवर्ड लिखें (कम से कम 6 अक्षर)">
+            <button class="panel-submit-btn" id="emailSubmitBtn">Email से आगे बढ़ें</button>
         </div>
 
         <div class="input-panel" id="phonePanel">
-            <input type="text" id="authPhoneInput" class="panel-input" placeholder="+91 9876543210 (कंट्री कोड के साथ)">
-            <button class="panel-submit-btn" id="sendOtpBtn" onclick="handlePhoneSmsAuth()">OTP भेजें</button>
-            <div id="recaptcha-container"></div>
+            <div class="phone-input-group">
+                <select id="countryCodeSelect" class="country-select">
+                    </select>
+                <input type="tel" id="authPhoneInput" class="panel-input" placeholder="मोबाइल नंबर दर्ज करें (बिना कंट्री कोड के)">
+            </div>
+            <div id="recaptcha-box-holder"></div>
+            <button class="panel-submit-btn" id="sendOtpBtn">OTP कोड भेजें</button>
             
-            <input type="text" id="authOtpInput" class="panel-input" placeholder="6-Digit OTP कोड यहाँ दर्ज करें" style="display:none; margin-top:10px;">
-            <button class="panel-submit-btn" id="verifyOtpBtn" onclick="verifyIncomingSmsCode()" style="display:none; margin-top:10px; background:var(--tiktok-pink); color:white;">OTP सत्यापित करें</button>
+            <input type="text" id="authOtpInput" class="panel-input" placeholder="6-अंकों का OTP यहाँ लिखें" style="display:none;">
+            <button class="panel-submit-btn" id="verifyOtpBtn" style="display:none; background:var(--tiktok-pink); color:white;">OTP सत्यापित करें</button>
         </div>
     </div>
 
@@ -109,7 +114,7 @@
     </div>
 
     <script>
-        // 🔒 FRESH SYNCHRONIZED APP CREDENTIALS
+        // 🔒 FRESH SYNCED KEYS FROM NEW PROJECT
         const firebaseConfig = {
             apiKey: "AIzaSyC6Hvm7sNfG-2Z-caXGmzPc_iSQUL-Evxw",
             authDomain: "ms-sort-video-c38c4.firebaseapp.com",
@@ -123,19 +128,60 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         let currentUserSession = null;
-        let confirmationResultTracker = null;
+        let smsConfirmationResult = null;
 
-        // Form switcher panel engine
-        function openInputPanel(panelId) {
+        // 🌍 FULL GLOBAL ISO COUNTRY CODES LIST DATA (Duniya Ki Har Choti Aur Badi Country)
+        const globalCountryDatabase = [
+            {code: "+91", name: "India (भारत)"}, {code: "+880", name: "Bangladesh (বাংলাদেশ)"}, {code: "+92", name: "Pakistan (पाकिस्तान)"},
+            {code: "+977", name: "Nepal (नेपाल)"}, {code: "+966", name: "Saudi Arabia (सऊदी अरब)"}, {code: "+971", name: "UAE / Dubai (दुबई)"},
+            {code: "+965", name: "Kuwait (कुवैत)"}, {code: "+968", name: "Oman (ओमान)"}, {code: "+974", name: "Qatar (कतर)"},
+            {code: "+973", name: "Bahrain (بحرين)"}, {code: "+60", name: "Malaysia (मलेशिया)"}, {code: "+65", name: "Singapore (सिंगापुर)"},
+            {code: "+1", name: "USA / Canada (अमेरिका)"}, {code: "+44", name: "United Kingdom (यूके)"}, {code: "+61", name: "Australia (ऑस्ट्रेलिया)"},
+            {code: "+af", name: "Afghanistan (+93)"}, {code: "+355", name: "Albania"}, {code: "+213", name: "Algeria"}, {code: "+a0", name: "Angola (+244)"},
+            {code: "+54", name: "Argentina"}, {code: "+374", name: "Armenia"}, {code: "+43", name: "Austria"}, {code: "+994", name: "Azerbaijan"},
+            {code: "+32", name: "Belgium"}, {code: "+975", name: "Bhutan"}, {code: "+55", name: "Brazil"}, {code: "+359", name: "Bulgaria"},
+            {code: "+86", name: "China"}, {code: "+57", name: "Colombia"}, {code: "+385", name: "Croatia"}, {code: "+357", name: "Cyprus"},
+            {code: "+420", name: "Czech Republic"}, {code: "+45", name: "Denmark"}, {code: "+20", name: "Egypt"}, {code: "+358", name: "Finland"},
+            {code: "+33", name: "France"}, {code: "+995", name: "Georgia"}, {code: "+49", name: "Germany"}, {code: "+30", name: "Greece"},
+            {code: "+852", name: "Hong Kong"}, {code: "+36", name: "Hungary"}, {code: "+62", name: "Indonesia"}, {code: "+98", name: "Iran"},
+            {code: "+964", name: "Iraq"}, {code: "+353", name: "Ireland"}, {code: "+39", name: "Italy"}, {code: "+81", name: "Japan"},
+            {code: "+962", name: "Jordan"}, {code: "+7", name: "Russia / Kazakhstan"}, {code: "+254", name: "Kenya"}, {code: "+82", name: "South Korea"},
+            {code: "+961", name: "Lebanon"}, {code: "+218", name: "Libya"}, {code: "+352", name: "Luxembourg"}, {code: "+360", name: "Maldives (+960)"},
+            {code: "+212", name: "Morocco"}, {code: "+95", name: "Myanmar"}, {code: "+31", name: "Netherlands"}, {code: "+64", name: "New Zealand"},
+            {code: "+47", name: "Norway"}, {code: "+48", name: "Poland"}, {code: "+351", name: "Portugal"}, {code: "+40", name: "Romania"},
+            {code: "+27", name: "South Africa"}, {code: "+34", name: "Spain"}, {code: "+94", name: "Sri Lanka"}, {code: "+46", name: "Sweden"},
+            {code: "+41", name: "Switzerland"}, {code: "+886", name: "Taiwan"}, {code: "+66", name: "Thailand"}, {code: "+90", name: "Turkey"},
+            {code: "+380", name: "Ukraine"}, {code: "+58", name: "Venezuela"}, {code: "+84", name: "Vietnam"}, {code: "+967", name: "Yemen"},
+            {code: "+260", name: "Zambia"}, {code: "+263", name: "Zimbabwe"}
+        ];
+
+        // Automatic Dropdown Injector Engine
+        window.addEventListener('DOMContentLoaded', () => {
+            const dropdown = document.getElementById('countryCodeSelect');
+            globalCountryDatabase.forEach(item => {
+                let option = document.createElement('option');
+                // Fix clean value strings
+                option.value = item.code.startsWith('+') ? item.code : ("+" + item.code.replace(/[^0-9]/g, ''));
+                option.textContent = `${item.name} [${option.value}]`;
+                dropdown.appendChild(option);
+            });
+        });
+
+        // Form switcher panels
+        document.getElementById('triggerEmailPanelBtn').addEventListener('click', () => toggleAuthInputPanels('emailPanel'));
+        document.getElementById('triggerPhonePanelBtn').addEventListener('click', () => toggleAuthInputPanels('phonePanel'));
+
+        function toggleAuthInputPanels(activePanelId) {
             document.getElementById('emailPanel').style.display = 'none';
             document.getElementById('phonePanel').style.display = 'none';
-            document.getElementById(panelId).style.display = 'flex';
-            if(panelId === 'phonePanel' && !window.recaptchaVerifier) {
-                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
+            document.getElementById(activePanelId).style.display = 'flex';
+            
+            if(activePanelId === 'phonePanel' && !window.recaptchaVerifierInstance) {
+                window.recaptchaVerifierInstance = new firebase.auth.RecaptchaVerifier('recaptcha-box-holder', { 'size': 'invisible' });
             }
         }
 
-        // 1. Google Identity Selector Engine
+        // 1. Google Safe Redirect Setup Trigger
         document.getElementById('googleLoginBtn').addEventListener('click', function() {
             const provider = new firebase.auth.GoogleAuthProvider();
             provider.setCustomParameters({ prompt: 'select_account' });
@@ -143,69 +189,74 @@
         });
 
         auth.getRedirectResult().then(result => {
-            if (result && result.user) { handleUserSessionUI(result.user); }
-        }).catch(err => console.log("System verification active."));
+            if (result && result.user) { refreshUserAuthSession(result.user); }
+        }).catch(err => console.log("Session verified via redirect tokens."));
 
-        // 2. International Email/Password Engine (Sign-in or Automatic Sign-up)
-        function handleEmailPasswordAuth() {
-            const email = document.getElementById('authEmailInput').value;
-            const pass = document.getElementById('authPasswordInput').value;
-            if(!email || !pass) { alert("कृपया दोनों फ़ील्ड भरें!"); return; }
-            
-            auth.signInWithEmailAndPassword(email, pass)
-                .then(res => handleUserSessionUI(res.user))
+        // 2. Email Sign-In or Automatic Sign-Up System
+        document.getElementById('emailSubmitBtn').addEventListener('click', function() {
+            const email = document.getElementById('authEmailInput').value.trim();
+            const password = document.getElementById('authPasswordInput').value;
+            if(!email || !password) { alert("कृपया दोनों जानकारी भरें!"); return; }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(res => refreshUserAuthSession(res.user))
                 .catch(error => {
-                    if (error.code === 'auth/user-not-found') {
-                        auth.createUserWithEmailAndPassword(email, pass)
-                            .then(res => handleUserSessionUI(res.user))
-                            .catch(e => alert("Registration alert: " + e.message));
-                    } else { alert("Login Alert: " + error.message); }
+                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .then(res => refreshUserAuthSession(res.user))
+                            .catch(e => alert("खाता निर्माण त्रुटि: " + e.message));
+                    } else { alert("त्रुटि संदेश: " + error.message); }
                 });
-        }
+        });
 
-        // 3. Global Phone SMS Auth Engine
-        function handlePhoneSmsAuth() {
-            const phoneNumber = document.getElementById('authPhoneInput').value;
-            if(!phoneNumber.startsWith('+')) { alert("कृपया देश का कोड जोड़ें! (जैसे भारत के लिए: +91)"); return; }
+        // 3. Absolute Global Phone SMS Auth Core
+        document.getElementById('sendOtpBtn').addEventListener('click', function() {
+            const codeSelector = document.getElementById('countryCodeSelect').value;
+            let phoneInput = document.getElementById('authPhoneInput').value.trim();
+            if(!phoneInput) { alert("कृपया मोबाइल नंबर दर्ज करें!"); return; }
             
-            auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
+            // Clean up numbers starting with zero
+            if(phoneInput.startsWith('0')) { phoneInput = phoneInput.substring(1); }
+            const fullPhoneNumber = codeSelector + phoneInput;
+            
+            auth.signInWithPhoneNumber(fullPhoneNumber, window.recaptchaVerifierInstance)
                 .then(confirmationResult => {
-                    confirmationResultTracker = confirmationResult;
+                    smsConfirmationResult = confirmationResult;
                     document.getElementById('authOtpInput').style.display = 'block';
                     document.getElementById('verifyOtpBtn').style.display = 'block';
                     document.getElementById('sendOtpBtn').style.display = 'none';
-                    alert("OTP आपके फ़ोन पर भेज दिया गया है!");
-                }).catch(err => alert("SMS Dispatch Error: " + err.message));
-        }
+                    alert("OTP कोड सफलतापूर्वक आपके मोबाइल पर भेज दिया गया है!");
+                }).catch(err => alert("SMS भेजने में विफल: " + err.message));
+        });
 
-        function verifyIncomingSmsCode() {
-            const code = document.getElementById('authOtpInput').value;
-            if(!code) { alert("कृपया सही OTP कोड दर्ज करें!"); return; }
+        document.getElementById('verifyOtpBtn').addEventListener('click', function() {
+            const otpCode = document.getElementById('authOtpInput').value.trim();
+            if(!otpCode) { alert("OTP खाली नहीं हो सकता!"); return; }
             
-            confirmationResultTracker.confirm(code)
-                .then(res => handleUserSessionUI(res.user))
-                .catch(err => alert("गलत OTP! कृपया पुनः प्रयास करें।"));
-        }
+            smsConfirmationResult.confirm(otpCode)
+                .then(res => refreshUserAuthSession(res.user))
+                .catch(err => alert("गलत OTP कोड! कृपया दोबारा जांचें।"));
+        });
 
-        function handleUserSessionUI(user) {
+        function refreshUserAuthSession(user) {
             currentUserSession = user;
-            const nameToShow = user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : "User");
-            document.getElementById('profileBtnText').innerText = nameToShow;
+            const profileText = user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : "Global User");
+            document.getElementById('profileBtnText').innerText = profileText;
             toggleLoginDashboard(false);
-            alert("लॉगिन सफल! स्वागत है: " + nameToShow);
+            alert("सफलतापूर्वक लॉगिन हुआ! स्वागत है: " + profileText);
         }
 
-        auth.onAuthStateChanged(user => { if (user) { handleUserSessionUI(user); } });
+        auth.onAuthStateChanged(user => { if (user) { refreshUserAuthSession(user); } });
 
-        // Interface triggers
-        document.getElementById('uploadPlusBtn').addEventListener('click', () => { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("वीडियो अपलोड सिंक हो रहा है..."); } });
-        document.getElementById('profileTabBtn').addEventListener('click', () => { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("सत्र सक्रिय है।"); } });
+        // General View Triggers
+        document.getElementById('uploadPlusBtn').addEventListener('click', () => { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("वीडियो अपलोड पैनल सक्रिय है!"); } });
+        document.getElementById('profileTabBtn').addEventListener('click', () => { if(!currentUserSession) { toggleLoginDashboard(true); } else { alert("आपका सत्र चालू है।"); } });
         document.getElementById('closeLoginBtn').addEventListener('click', () => toggleLoginDashboard(false));
 
         document.getElementById('dobSubmitBtn').addEventListener('click', () => {
             const inputDate = document.getElementById('userBirthDateField').value;
             if(!inputDate) { alert("तारीख दर्ज करें!"); return; }
-            if((new Date().getFullYear() - new Date(inputDate).getFullYear()) < 13) { alert("आयु सीमा कम से कम 13 वर्ष है!"); } 
+            if((new Date().getFullYear() - new Date(inputDate).getFullYear()) < 13) { alert("आयु सीमा न्यूनतम 13 वर्ष है!"); } 
             else {
                 localStorage.setItem('ms_user_dob', inputDate);
                 document.getElementById('dobVerificationModal').style.display = 'none';

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MS Shorts - Balance Dashboard</title>
+    <style>
+        :root { --tiktok-pink: #fe2c55; --tiktok-cyan: #25f4ee; --tile-dark: #1c1c1e; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        body { background: #000; height: 100vh; display: flex; justify-content: center; align-items: center; color: #fff; overflow: hidden; }
+        .wallet-shell { width: 100%; max-width: 450px; height: 100vh; background: #0a0a0c; position: relative; padding: 24px; display: flex; flex-direction: column; }
+        
+        .header-bar { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; margin-top: 10px; }
+        .back-link { font-size: 24px; color: #fff; text-decoration: none; }
+        
+        /* Premium Balance Metrics Display */
+        .balance-hero-card { background: linear-gradient(145deg, #1f1f24 0%, #141416 100%); border-radius: 24px; padding: 30px 20px; border: 1px solid #2c2c30; text-align: center; margin-bottom: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        .coins-count-text { font-size: 42px; font-weight: 900; color: #fff; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; }
+        .currency-equivalent-subtext { font-size: 14px; color: #71717a; font-weight: 500; }
+        
+        .panel-tile-grid { background: var(--tile-dark); border-radius: 16px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border: 1px solid #2c2c32; }
+        .tile-action-title { font-size: 14px; font-weight: 600; }
+        .tile-status-pill { font-size: 12px; background: rgba(37, 244, 238, 0.1); color: var(--tiktok-cyan); padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        
+        .payout-btn { background: var(--tiktok-pink); color: #fff; border: none; padding: 16px; font-size: 16px; font-weight: 700; border-radius: 14px; cursor: pointer; width: 100%; margin-top: auto; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(254, 44, 85, 0.3); }
+    </style>
+</head>
+<body>
+    <div class="wallet-shell">
+        <div class="header-bar">
+            <a href="index.html" class="back-link">←</a>
+            <h3 style="font-size:18px; font-weight:800;">Balance & Earnings</h3>
+        </div>
+
+        <div class="balance-hero-card">
+            <div class="coins-count-text">🪙 <span id="coinBalanceDisplay">0</span></div>
+            <div class="currency-equivalent-subtext">Estimated Diamonds Cash Value: <span id="cashValueDisplay" style="color:var(--tiktok-cyan); font-weight:bold;">₹0.00</span></div>
+        </div>
+
+        <div class="panel-tile-grid">
+            <div class="tile-action-title">Live Gifts Monetization</div>
+            <div class="tile-status-pill">Active Verified</div>
+        </div>
+        <div class="panel-tile-grid">
+            <div class="tile-action-title">Creator Rewards Program</div>
+            <div class="tile-status-pill">Enrolled</div>
+        </div>
+
+        <button class="payout-btn" onclick="processPayout()">Withdraw Creator Cash</button>
+    </div>
+
+    <script>
+        window.onload = () => {
+            const currentCoins = parseInt(localStorage.getItem('wallet_bal')) || 0;
+            document.getElementById('coinBalanceDisplay').innerText = currentCoins;
+            document.getElementById('cashValueDisplay').innerText = "₹" + (currentCoins * 0.45).toFixed(2);
+        };
+
+        function processPayout() {
+            const amt = localStorage.getItem('wallet_bal');
+            if(parseInt(amt) <= 0) { alert("Earnings low to withdraw!"); return; }
+            alert(`💸 Payout Request Received 💸\n\nYour account has processed successfully. Financial settlement node routing ₹${(parseInt(amt)*0.45).toFixed(2)} directly to linked account!`);
+        }
+    </script>
+</body>
+</html>

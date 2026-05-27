@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MS TikTok Login</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:black;
+font-family:Arial;
+color:white;
+overflow:hidden;
+}
+
+.top{
+position:absolute;
+top:20px;
+width:100%;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.videoBg{
+
+position:absolute;
+width:100%;
+height:100vh;
+object-fit:cover;
+z-index:-1;
+opacity:0.4;
+
+}
+
+.loginBox{
+
+position:absolute;
+bottom:120px;
+width:100%;
+padding:20px;
+
+}
+
+button{
+
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:15px;
+font-size:18px;
+font-weight:bold;
+
+}
+
+.google{
+
+background:white;
+color:black;
+
+}
+
+.phone{
+
+background:#00c853;
+color:white;
+
+}
+
+.email{
+
+background:#ff0050;
+color:white;
+
+}
+
+.bottomNav{
+
+position:fixed;
+bottom:0;
+width:100%;
+height:65px;
+background:#111;
+display:flex;
+justify-content:space-around;
+align-items:center;
+font-size:14px;
+
+}
+
+.nav{
+
+text-align:center;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<video
+class="videoBg"
+autoplay
+muted
+loop
+playsinline>
+
+<source
+src="https://www.w3schools.com/html/mov_bbb.mp4"
+type="video/mp4">
+
+</video>
+
+<div class="top">
+
+MS SHORT VIDEO
+
+</div>
+
+<div class="loginBox">
+
+<button
+class="google"
+onclick="googleLogin()">
+
+Continue with Google
+
+</button>
+
+<button
+class="phone"
+onclick="phoneLogin()">
+
+Continue with Phone
+
+</button>
+
+<button
+class="email"
+onclick="emailLogin()">
+
+Login with Email
+
+</button>
+
+</div>
+
+<div class="bottomNav">
+
+<div class="nav">
+🏠<br>Home
+</div>
+
+<div class="nav">
+👥<br>Friends
+</div>
+
+<div class="nav">
+➕<br>Upload
+</div>
+
+<div class="nav">
+📥<br>Inbox
+</div>
+
+<div class="nav">
+👤<br>Profile
+</div>
+
+</div>
+
+<script>
+
+function googleLogin(){
+
+alert(
+"✅ Google Login Ready"
+);
+
+}
+
+function phoneLogin(){
+
+alert(
+"✅ Phone Login Ready"
+);
+
+}
+
+function emailLogin(){
+
+window.location.href=
+"wallet.html";
+
+}
+
+</script>
+
+</body>
+</html>
